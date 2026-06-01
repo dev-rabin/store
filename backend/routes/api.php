@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\PaymentController;
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -37,3 +38,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [CheckoutController::class, 'getOrders']);
     Route::get('/orders/{id}', [CheckoutController::class, 'getOrder']);
 });
+
+
+Route::middleware('auth:sanctum')->post(
+    '/payment/create',
+    [PaymentController::class, 'create']
+);
+
+Route::post(
+    '/payment/webhook',
+    [PaymentController::class, 'webhook']
+);

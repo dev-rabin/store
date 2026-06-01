@@ -35,6 +35,13 @@ export default function Navbar() {
           </Link>
 
           <Link
+            to="/orders"
+            className="hover:text-red-500 transition duration-200"
+          >
+            Orders
+          </Link>
+
+          <Link
             to="/products"
             className="hover:text-red-500 transition duration-200"
           >

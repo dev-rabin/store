@@ -144,3 +144,11 @@ export const getOrderById = async (id) => {
     throw error.response?.data || error;
   }
 };
+
+export const createPayment = async (orderId) => {
+  const response = await API.post("/payment/create", {
+    order_id: orderId,
+  });
+
+  return response.data;
+};

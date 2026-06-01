@@ -13,6 +13,7 @@ import ProtectedRoute from "./guard/protectedRoute";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
+import PaymentReturn from "./pages/PaymentReturn";
 
 const App = () => {
   const token = localStorage.getItem("token");
@@ -33,7 +34,8 @@ const App = () => {
           path="/signup"
           element={token ? <Navigate to="/" replace /> : <Signup />}
         />
-
+        <Route path="/payment/return" element={<PaymentReturn />} />
+        
         {/* Protected Routes */}
         <Route
           path="/"
