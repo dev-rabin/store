@@ -6,12 +6,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../guard/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-
+  const { cartCount } = useCart();
   const userName = localStorage.getItem("user_name") || "U";
 
   const handleLogout = () => {
@@ -73,15 +74,20 @@ export default function Navbar() {
             <FontAwesomeIcon icon={faHeart} className="text-xl text-gray-700" />
           </button>
 
-          <button className="relative hover:scale-110 transition">
+          <button
+            onClick={() => navigate("/cart")}
+            className="relative hover:scale-110 transition"
+          >
             <FontAwesomeIcon
               icon={faCartShopping}
               className="text-xl text-gray-700"
             />
 
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] h-5 w-5 rounded-full flex items-center justify-center">
-              2
-            </span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] h-5 w-5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </button>
 
           {!isLoggedIn ? (

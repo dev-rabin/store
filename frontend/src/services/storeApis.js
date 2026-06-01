@@ -69,3 +69,52 @@ export const getProfile = async () => {
   const res = await API.get("/profile");
   return res.data;
 };
+
+
+export const addToCart = async (productId) => {
+  try {
+    const res = await API.post("/cart/add", {
+      product_id: productId,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error("Add to cart error:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const getCart = async () => {
+  try {
+    const res = await API.get("/cart");
+
+    return res.data;
+  } catch (error) {
+    console.error("Get cart error:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const updateCart = async (id, quantity) => {
+  try {
+    const res = await API.put(`/cart/${id}`, {
+      quantity,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error("Update cart error:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const removeCart = async (id) => {
+  try {
+    const res = await API.delete(`/cart/${id}`);
+
+    return res.data;
+  } catch (error) {
+    console.error("Remove cart error:", error);
+    throw error.response?.data || error;
+  }
+};

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ViewAllBtn from "./ViewAllBtn";
 import Heading from "./Heading";
 import { fetchProducts } from "../../services/storeApis";
+import AddToCart from "./AddToCart";
 
 const TodayDeal = () => {
   const [products, setProducts] = useState([]);
@@ -85,9 +86,7 @@ const TodayDeal = () => {
                   Quick View
                 </button>
 
-                <button className="rounded-full bg-black text-white px-5 py-2 text-sm font-medium shadow-lg whitespace-nowrap">
-                  Add Cart
-                </button>
+                <AddToCart productId={product.id} />
               </div>
             </div>
 

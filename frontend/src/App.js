@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./guard/protectedRoute";
+import Cart from "./pages/Cart";
 
 const App = () => {
   const token = localStorage.getItem("token");
@@ -55,6 +56,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProductDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
             </ProtectedRoute>
           }
         />
