@@ -1,12 +1,29 @@
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faSearch, faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faCartShopping,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../guard/AuthContext";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+
+  const userName = localStorage.getItem("user_name") || "U";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_name");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
   return (
     <>
-      <nav className="max-w-7xl mx-auto py-5 px-2 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto py-4 px-4 flex items-center justify-between">
         <Link to="/" className="text-3xl font-bold tracking-wide text-black">
           Shoppy
         </Link>
@@ -14,6 +31,13 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8 font-medium">
           <Link to="/" className="hover:text-red-500 transition duration-200">
             Home
+          </Link>
+
+          <Link
+            to="/products"
+            className="hover:text-red-500 transition duration-200"
+          >
+            Products
           </Link>
 
           <Link
@@ -29,16 +53,8 @@ export default function Navbar() {
           >
             About
           </Link>
-
-          <Link
-            to="/signup"
-            className="hover:text-red-500 transition duration-200"
-          >
-            Sign Up
-          </Link>
         </div>
 
-        {/* Right Side */}
         <div className="flex items-center gap-5">
           <div className="relative hidden lg:block">
             <input
@@ -67,6 +83,39 @@ export default function Navbar() {
               2
             </span>
           </button>
+
+          {!isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <Link
+                to="/login"
+                className="px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-100"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/signup"
+                className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                Sign Up
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link to="/profile">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white flex items-center justify-center font-bold">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-500 hover:text-white transition"
+              >
+                <FontAwesomeIcon icon={faRightFromBracket} />
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 

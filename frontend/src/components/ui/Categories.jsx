@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   faMobileScreen,
   faLaptop,
@@ -6,65 +6,112 @@ import {
   faCamera,
   faGamepad,
   faClock,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Heading from "./Heading";
 import ViewAllBtn from "./ViewAllBtn";
+import { fetchCategories } from "../../services/storeApis";
 
-const categories = [
-  {
-    id: 1,
-    name: "Mobiles",
-    icon: faMobileScreen,
-    count: "120+ Products",
-  },
-  {
-    id: 2,
-    name: "Laptops",
-    icon: faLaptop,
-    count: "80+ Products",
-  },
-  {
-    id: 3,
-    name: "Audio",
-    icon: faHeadphones,
-    count: "200+ Products",
-  },
-  {
-    id: 4,
-    name: "Gaming",
-    icon: faGamepad,
-    count: "95+ Products",
-  },
-  {
-    id: 5,
-    name: "Camera",
-    icon: faCamera,
-    count: "65+ Products",
-  },
-  {
-    id: 6,
-    name: "Smart Watch",
-    icon: faClock,
-    count: "110+ Products",
-  },
-];
+const iconMap = {
+  Mobiles: faMobileScreen,
+  Laptops: faLaptop,
+  Audio: faHeadphones,
+  Earbuds: faHeadphones,
+  Camera: faCamera,
+  Gaming: faGamepad,
+  "Smart Watch": faClock,
+  Charger: faMobileScreen,
+  "Power Bank": faMobileScreen,
+};
 
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data || []);
+      } catch (err) {
+        setError("Failed to load categories");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCategories();
+  }, []);
+
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({
+      left: -1200,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({
+      left: 1200,
+      behavior: "smooth",
+    });
+  };
+
+  if (loading) {
+    return (
+      <section className="max-w-7xl mx-auto px-6 py-20 text-center">
+        Loading categories...
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="max-w-7xl mx-auto px-6 py-20 text-center text-red-500">
+        {error}
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-7xl mx-auto px-6 py-20">
       <Heading title="Categories" />
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
         <h2 className="text-4xl font-bold text-gray-900">Browse By Category</h2>
-        <ViewAllBtn />
+
+        <div className="flex items-center gap-3 mt-4 md:mt-0">
+          <button
+            onClick={scrollLeft}
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-500 hover:text-white transition"
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
+
+          <button
+            onClick={scrollRight}
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-500 hover:text-white transition"
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
+
+          <ViewAllBtn />
+        </div>
       </div>
 
-      {/* Categories Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-        {categories.map((category) => (
+      <div
+        ref={scrollRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide py-5 px-2"
+      >
+        {categories.map((category, index) => (
           <div
-            key={category.id}
+            key={index}
             className="
               group
               relative
@@ -78,6 +125,8 @@ const Categories = () => {
               hover:-translate-y-3
               transition-all
               duration-500
+              flex-shrink-0
+              w-[180px]
             "
           >
             {/* Gradient Hover Background */}
@@ -105,7 +154,7 @@ const Categories = () => {
                 "
               >
                 <FontAwesomeIcon
-                  icon={category.icon}
+                  icon={iconMap[category] || faMobileScreen}
                   className="
                     text-4xl
                     text-gray-700
@@ -121,9 +170,10 @@ const Categories = () => {
                   text-gray-900
                   group-hover:text-white
                   transition
+                  text-center
                 "
               >
-                {category.name}
+                {category}
               </h3>
 
               <p
@@ -135,7 +185,7 @@ const Categories = () => {
                   transition
                 "
               >
-                {category.count}
+                Products
               </p>
             </div>
           </div>

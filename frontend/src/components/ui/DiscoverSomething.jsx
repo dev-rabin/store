@@ -1,6 +1,8 @@
 import React from "react";
 import { faHeart, faEye, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ViewAllBtn from "./ViewAllBtn";
+import Heading from "./Heading";
 
 const products = [
   {
@@ -43,10 +45,12 @@ const products = [
 const DiscoverProducts = () => {
   return (
     <section className="max-w-7xl mx-auto px-6 py-20">
-      {/* Heading */}
-      <h2 className="text-center text-5xl font-bold text-gray-900 mb-14">
-        Discover Something New.
-      </h2>
+      <Heading title="New" />
+
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-4xl font-bold">Discovered Something New</h2>
+        <ViewAllBtn />
+      </div>
 
       {/* Products */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 border border-gray-200">

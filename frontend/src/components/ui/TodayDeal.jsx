@@ -1,59 +1,60 @@
 import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ViewAllBtn from "./ViewAllBtn";
 import Heading from "./Heading";
+import { fetchProducts } from "../../services/storeApis";
 
 const TodayDeal = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Canon Camera",
-      price: 100,
-      image: "/image/iphone.jpg",
-      rating: 5,
-      reviews: 83,
-      discount: 20,
-    },
-    {
-      id: 2,
-      name: "Sony Camera",
-      price: 120,
-      image: "/image/iphone.jpg",
-      rating: 4,
-      reviews: 65,
-      discount: 15,
-    },
-    {
-      id: 3,
-      name: "Nikon Camera",
-      price: 90,
-      image: "/image/iphone.jpg",
-      rating: 5,
-      reviews: 102,
-      discount: 25,
-    },
-    {
-      id: 4,
-      name: "Canon Camera",
-      price: 100,
-      image: "/image/iphone.jpg",
-      rating: 5,
-      reviews: 83,
-      discount: 20,
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        const randomProducts = [...data]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 4);
+
+        setProducts(randomProducts);
+      } catch (err) {
+        setError("Failed to load products");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        Loading products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-red-500">
+        {error}
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       <Heading title="Today's Deal" />
 
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-4xl font-bold">Flash Sales</h2>
-
-        <ViewAllBtn />
+        <ViewAllBtn url="/products" />
       </div>
 
-      {/* Products */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <div
@@ -63,7 +64,7 @@ const TodayDeal = () => {
             <div className="relative h-80 overflow-hidden">
               <div className="absolute left-4 top-4 z-20">
                 <span className="rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-4 py-1.5 text-xs font-semibold text-white shadow-lg">
-                  SAVE {product.discount}%
+                  SAVE {product.discount || 0}%
                 </span>
               </div>
 
@@ -72,7 +73,7 @@ const TodayDeal = () => {
               </button>
 
               <img
-                src={product.image}
+                src={product.img}
                 alt={product.name}
                 className="h-full w-full object-contain transition duration-700 group-hover:scale-110 group-hover:rotate-2"
               />
@@ -92,7 +93,7 @@ const TodayDeal = () => {
 
             <div className="p-6">
               <p className="mb-1 text-sm uppercase tracking-widest text-gray-400">
-                Electronics
+                {product.category || "Electronics"}
               </p>
 
               <h3 className="mb-3 text-lg font-semibold text-gray-900 line-clamp-1">
@@ -101,24 +102,26 @@ const TodayDeal = () => {
 
               <div className="mb-4 flex items-center">
                 <div className="flex gap-1 text-amber-400">
-                  {[...Array(product.rating)].map((_, index) => (
-                    <FontAwesomeIcon key={index} icon={faStar} />
-                  ))}
+                  {[...Array(Math.round(product.rating || 5))].map(
+                    (_, index) => (
+                      <FontAwesomeIcon key={index} icon={faStar} />
+                    ),
+                  )}
                 </div>
 
                 <span className="ml-2 text-sm text-gray-500">
-                  ({product.reviews})
+                  ({product.reviews || 0})
                 </span>
               </div>
 
               <div className="flex items-end justify-between">
                 <div>
                   <span className="text-2xl font-bold text-gray-900">
-                    ${product.price}
+                    ₹{product.price}
                   </span>
 
                   <span className="ml-2 text-sm text-gray-400 line-through">
-                    ${product.price + 40}
+                    ₹{(product.price || 0) + 40}
                   </span>
                 </div>
 
