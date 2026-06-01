@@ -6,7 +6,7 @@ const Loader = () => {
       <div className="flex flex-col items-center gap-4">
         <div className="w-14 h-14 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
 
-        <p className="text-gray-600 font-medium">Loading Cart...</p>
+        <p className="text-gray-600 font-medium">Loading...</p>
       </div>
     </div>
   );

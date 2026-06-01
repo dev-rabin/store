@@ -70,7 +70,6 @@ export const getProfile = async () => {
   return res.data;
 };
 
-
 export const addToCart = async (productId) => {
   try {
     const res = await API.post("/cart/add", {
@@ -115,6 +114,33 @@ export const removeCart = async (id) => {
     return res.data;
   } catch (error) {
     console.error("Remove cart error:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const checkout = async () => {
+  try {
+    const res = await API.post("/checkout");
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const getOrders = async () => {
+  try {
+    const res = await API.get("/orders");
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const getOrderById = async (id) => {
+  try {
+    const res = await API.get(`/orders/${id}`);
+    return res.data;
+  } catch (error) {
     throw error.response?.data || error;
   }
 };

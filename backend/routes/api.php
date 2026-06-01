@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CheckoutController;
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -28,4 +29,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'getCart']);
     Route::put('/cart/{id}', [CartController::class, 'updateCart']);
     Route::delete('/cart/{id}', [CartController::class, 'removeCart']);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
+    Route::get('/orders', [CheckoutController::class, 'getOrders']);
+    Route::get('/orders/{id}', [CheckoutController::class, 'getOrder']);
 });

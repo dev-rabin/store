@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getCart, removeCart, updateCart } from "../services/storeApis";
+import {
+  checkout,
+  getCart,
+  removeCart,
+  updateCart,
+} from "../services/storeApis";
 import Loader from "../components/ui/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+
+      const data = await checkout();
+
+      navigate(`/orders/${data.order_id}`);
+    } catch (error) {
+      console.log(error);
+
+      alert(error?.message || "Unable to place order. Please try again.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   const fetchCart = async () => {
     try {
       setLoading(true);
@@ -146,8 +172,12 @@ const Cart = () => {
                   <span>₹{subtotal}</span>
                 </div>
 
-                <button className="w-full mt-6 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
-                  Proceed To Checkout
+                <button
+                  onClick={handleCheckout}
+                  disabled={checkoutLoading}
+                  className="w-full mt-6 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50"
+                >
+                  {checkoutLoading ? "Placing Order..." : "Proceed To Checkout"}
                 </button>
               </div>
             </div>

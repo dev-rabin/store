@@ -11,6 +11,8 @@ import Signup from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./guard/protectedRoute";
 import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 
 const App = () => {
   const token = localStorage.getItem("token");
@@ -65,6 +67,24 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Cart />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetails />
             </ProtectedRoute>
           }
         />
