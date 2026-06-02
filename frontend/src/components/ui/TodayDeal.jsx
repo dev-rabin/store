@@ -5,6 +5,7 @@ import ViewAllBtn from "./ViewAllBtn";
 import Heading from "./Heading";
 import { fetchProducts } from "../../services/storeApis";
 import AddToCart from "./AddToCart";
+import Loader from "./Loader";
 
 const TodayDeal = () => {
   const [products, setProducts] = useState([]);
@@ -34,7 +35,7 @@ const TodayDeal = () => {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        Loading products...
+        <Loader />
       </div>
     );
   }

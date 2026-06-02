@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Heading from "./Heading";
 import ViewAllBtn from "./ViewAllBtn";
 import { fetchCategories } from "../../services/storeApis";
+import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
 
 const iconMap = {
   Mobiles: faMobileScreen,
@@ -27,6 +29,7 @@ const iconMap = {
 };
 
 const Categories = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -65,9 +68,9 @@ const Categories = () => {
 
   if (loading) {
     return (
-      <section className="max-w-7xl mx-auto px-6 py-20 text-center">
-        Loading categories...
-      </section>
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <Loader />
+      </div>
     );
   }
 
@@ -129,14 +132,16 @@ const Categories = () => {
               w-[180px]
             "
           >
-            {/* Gradient Hover Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-red-500 via-pink-500 to-orange-500 opacity-0 group-hover:opacity-100 transition duration-500"></div>
 
-            {/* Decorative Circle */}
             <div className="absolute -right-12 -top-12 w-28 h-28 rounded-full bg-white/20 scale-0 group-hover:scale-150 transition duration-700"></div>
 
-            {/* Content */}
-            <div className="relative z-10 flex flex-col items-center">
+            <div
+              className="relative z-10 flex flex-col items-center"
+              onClick={() =>
+                navigate(`/products?category=${encodeURIComponent(category)}`)
+              }
+            >
               <div
                 className="
                   w-20 h-20

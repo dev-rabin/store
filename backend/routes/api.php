@@ -20,6 +20,7 @@ Route::get('/profile', function (Request $request) {
 });
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/new-arrivals', [ProductController::class, 'newArrivals']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::get('/categories', [ProductController::class, 'categories']);

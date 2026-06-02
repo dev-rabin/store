@@ -2,40 +2,65 @@ import React, { useEffect, useState } from "react";
 import { faHeart, faStar, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchCategories, fetchProducts } from "../services/storeApis";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Loader from "../components/ui/Loader";
+import AddToCart from "../components/ui/AddToCart";
 
 const Products = () => {
   const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("latest");
 
   const [loading, setLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get("search") || "";
+  const category = searchParams.get("category") || "";
 
   useEffect(() => {
-    loadData();
+    loadCategories();
   }, []);
 
   useEffect(() => {
-    filterProducts();
-  }, [products, selectedCategory, search, sort]);
+    loadProducts();
+  }, [search, category]);
 
-  const loadData = async () => {
+  useEffect(() => {
+    filterProducts();
+  }, [products, selectedCategory, sort]);
+
+  const loadCategories = async () => {
     try {
-      const productData = await fetchProducts();
       const categoryData = await fetchCategories();
+      setCategories(categoryData || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadProducts = async () => {
+    try {
+      if (products.length === 0) {
+        setLoading(true);
+      } else {
+        setProductsLoading(true);
+      }
+      console.log("Search:", search);
+      console.log("Category:", category);
+      const productData = await fetchProducts(search, category);
 
       setProducts(productData || []);
-      setFilteredProducts(productData || []);
-      setCategories(categoryData || []);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+      setProductsLoading(false);
     }
   };
 
@@ -49,29 +74,24 @@ const Products = () => {
       );
     }
 
-    if (search) {
-      data = data.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
+    switch (sort) {
+      case "low-high":
+        data.sort((a, b) => a.price - b.price);
+        break;
 
-    if (sort === "low-high") {
-      data.sort((a, b) => a.price - b.price);
-    }
+      case "high-low":
+        data.sort((a, b) => b.price - a.price);
+        break;
 
-    if (sort === "high-low") {
-      data.sort((a, b) => b.price - a.price);
+      default:
+        break;
     }
 
     setFilteredProducts(data);
   };
 
   if (loading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        Loading Products...
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -117,22 +137,6 @@ const Products = () => {
           {/* Sidebar */}
           <div className="bg-white p-6 rounded-3xl shadow h-fit sticky top-24">
             <h3 className="text-2xl font-bold mb-6">Filters</h3>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search products"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full border rounded-xl py-3 px-4 pr-10"
-              />
-
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="absolute right-4 top-4 text-gray-400"
-              />
-            </div>
-
             <div className="mt-8">
               <h4 className="font-semibold mb-4">Categories</h4>
 
@@ -172,56 +176,60 @@ const Products = () => {
                 <option value="high-low">Price High to Low</option>
               </select>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-                  onClick={() => {
-                    navigate(`/product-detail/${product.id}`);
-                  }}
-                >
-                  <div className="relative h-52">
-                    <button className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white shadow flex items-center justify-center hover:bg-red-500 hover:text-white transition">
-                      <FontAwesomeIcon icon={faHeart} />
-                    </button>
-
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="p-4">
-                    <p className="text-xs uppercase text-gray-400 mb-1">
-                      {product.category}
-                    </p>
-
-                    <h3 className="font-semibold text-gray-900 line-clamp-2 h-12">
-                      {product.name}
-                    </h3>
-
-                    <div className="flex items-center gap-1 text-amber-400 text-sm mt-2">
-                      {[...Array(5)].map((_, index) => (
-                        <FontAwesomeIcon key={index} icon={faStar} />
-                      ))}
-                      <span className="text-gray-500 ml-1">(24)</span>
-                    </div>
-
-                    <div className="flex justify-between items-center mt-4">
-                      <span className="text-xl font-bold text-red-500">
-                        ₹{product.price}
-                      </span>
-
-                      <button className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-red-500 transition">
-                        Add Cart
-                      </button>
-                    </div>
-                  </div>
+              {productsLoading ? (
+                <div className="col-span-full h-10 flex justify-center items-center">
+                  <Loader />
                 </div>
-              ))}
+              ) : (
+                filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  >
+                    <div className="relative h-52">
+                      <button className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white shadow flex items-center justify-center hover:bg-red-500 hover:text-white transition">
+                        <FontAwesomeIcon icon={faHeart} />
+                      </button>
+
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="p-4">
+                      <p className="text-xs uppercase text-gray-400 mb-1">
+                        {product.category}
+                      </p>
+
+                      <h3
+                        onClick={() => {
+                          navigate(`/product-detail/${product.id}`);
+                        }}
+                        className="font-semibold text-gray-900 line-clamp-2 h-12 hover:underline hover:cursor-pointer"
+                      >
+                        {product.name}
+                      </h3>
+
+                      <div className="flex items-center gap-1 text-amber-400 text-sm mt-2">
+                        {[...Array(5)].map((_, index) => (
+                          <FontAwesomeIcon key={index} icon={faStar} />
+                        ))}
+                        <span className="text-gray-500 ml-1">(24)</span>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-4">
+                        <span className="text-xl font-bold text-red-500">
+                          ₹{product.price}
+                        </span>
+                        <AddToCart productId={product.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             {filteredProducts.length === 0 && (

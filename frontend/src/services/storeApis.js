@@ -9,12 +9,32 @@ export const fetchCategories = async () => {
   }
 };
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (search = "", category = "") => {
   try {
-    const res = await API.get("/products");
+    console.log("API Params", {
+      search,
+      category,
+    });
+    const res = await API.get("/products", {
+      params: {
+        search,
+        category,
+      },
+    });
+
     return res.data.products;
   } catch (error) {
     console.error(error);
+    return [];
+  }
+};
+
+export const fetchNewArrivals = async () => {
+  try {
+    const res = await API.get("/products/new-arrivals");
+    return res.data.products;
+  } catch (error) {
+    throw error.response?.data || error;
   }
 };
 

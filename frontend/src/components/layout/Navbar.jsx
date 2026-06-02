@@ -5,15 +5,18 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const { cartCount } = useCart();
   const userName = localStorage.getItem("user_name") || "U";
+  const [search, setSearch] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -22,6 +25,28 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  useEffect(() => {
+    if (!search.trim()) return;
+
+    const timer = setTimeout(() => {
+      navigate(`/products?search=${encodeURIComponent(search)}`);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+
+    setSearch(value);
+
+    if (!value.trim()) {
+      navigate("/products");
+      return;
+    }
+
+    navigate(`/products?search=${encodeURIComponent(value)}`);
+  };
   return (
     <>
       <nav className="max-w-7xl mx-auto py-4 px-4 flex items-center justify-between">
@@ -69,6 +94,9 @@ export default function Navbar() {
               type="search"
               placeholder="Search products..."
               className="w-72 bg-gray-100 rounded-lg py-3 pl-4 pr-10 text-sm outline-none focus:ring-2 focus:ring-red-400"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleSearch}
             />
 
             <FontAwesomeIcon

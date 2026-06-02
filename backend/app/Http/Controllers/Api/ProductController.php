@@ -9,11 +9,21 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     // Get all products
-    public function index()
+    public function index(Request $request)
     {
+        $products = Product::query();
+
+        if ($request->filled('search')) {
+            $products->where('name', 'ILIKE', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('category')) {
+            $products->where('category', $request->category);
+        }
+
         return response()->json([
             'success' => true,
-            'products' => Product::all()
+            'products' => $products->latest()->get()
         ]);
     }
 
@@ -63,4 +73,17 @@ class ProductController extends Controller
             'categories' => $categories
         ]);
     }
+
+    public function newArrivals()
+        {
+            $products = Product::where('is_new_arrival', true)
+                ->latest()
+                ->take(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+            ]);
+        }
 }

@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import { fetchProduct } from "../services/storeApis";
+import AddToCart from "../components/ui/AddToCart";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -119,17 +120,8 @@ const ProductDetails = () => {
 
             {/* Buttons */}
             <div className="flex flex-wrap gap-4 mt-10">
-              <button className="bg-red-500 hover:bg-red-600 text-white px-10 py-4 rounded-2xl font-semibold transition">
-                Add To Cart
-              </button>
+              <AddToCart productId={product.id} />
 
-              <button className="bg-black hover:bg-gray-800 text-white px-10 py-4 rounded-2xl font-semibold transition">
-                Buy Now
-              </button>
-
-              <button className="w-14 h-14 bg-white rounded-2xl shadow hover:bg-red-500 hover:text-white transition">
-                <FontAwesomeIcon icon={faHeart} />
-              </button>
             </div>
 
             {/* Features */}
