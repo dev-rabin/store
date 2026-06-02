@@ -105,26 +105,6 @@ export default function Navbar() {
             />
           </div>
 
-          <button className="relative hover:scale-110 transition">
-            <FontAwesomeIcon icon={faHeart} className="text-xl text-gray-700" />
-          </button>
-
-          <button
-            onClick={() => navigate("/cart")}
-            className="relative hover:scale-110 transition"
-          >
-            <FontAwesomeIcon
-              icon={faCartShopping}
-              className="text-xl text-gray-700"
-            />
-
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] h-5 w-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </button>
-
           {!isLoggedIn ? (
             <div className="flex items-center gap-3">
               <Link
@@ -142,20 +122,37 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <Link to="/profile">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white flex items-center justify-center font-bold">
-                  {userName.charAt(0).toUpperCase()}
-                </div>
-              </Link>
-
+            <>
               <button
-                onClick={handleLogout}
-                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-500 hover:text-white transition"
+                onClick={() => navigate("/cart")}
+                className="relative hover:scale-110 transition"
               >
-                <FontAwesomeIcon icon={faRightFromBracket} />
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  className="text-xl text-gray-700"
+                />
+
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] h-5 w-5 rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
               </button>
-            </div>
+              <div className="flex items-center gap-3">
+                <Link to="/profile">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white flex items-center justify-center font-bold">
+                    {userName.charAt(0).toUpperCase()}
+                  </div>
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-500 hover:text-white transition"
+                >
+                  <FontAwesomeIcon icon={faRightFromBracket} />
+                </button>
+              </div>
+            </>
           )}
         </div>
       </nav>

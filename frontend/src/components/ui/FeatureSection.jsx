@@ -13,7 +13,9 @@ const FeaturedSection = () => {
           </span>
         </div>
 
-        <h2 className="text-4xl font-bold text-gray-900">New Arrival</h2>
+        <h2 className="text-4xl sm:text-xs lg:text-lg font-bold">
+          New Arrival
+        </h2>
       </div>
 
       {/* Grid */}

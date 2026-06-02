@@ -2,58 +2,115 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <>
-      <div className="container bg-black text-white w-full py-12">
-        <div className="flex justify-between flex-row w-4/5 mx-auto h-full">
-          <div className="flex justify-start flex-col">
-            <p className="text-xl font-medium">Shoppy</p>
-            <p className="my-2">Subscribe</p>
-            <p className="my-2">Get 10% off your first order</p>
-          </div>
-
-          <div className="flex justify-between flex-col">
-            <p className="text-xl font-medium"> Support</p>
-            <p className="my-2">
-              Dx, 71/1,New Colony, <br />
-              Palwal-India (121102)
+    <footer className="bg-black text-white">
+      <div className="max-w-7xl mx-auto px-5 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Brand */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Shoppy</h2>
+            <p className="text-gray-400 leading-relaxed">
+              Discover quality products at the best prices. Shop with confidence
+              and enjoy a seamless shopping experience.
             </p>
-            <p className="my-2">robinmandhotia@gmail.com</p>
-            <p className="my-2">+91 0306646417</p>
           </div>
 
-          <div className="flex justify-between flex-col">
-            <p className="text-xl font-medium">Account</p>
-            <p>My Account</p>
-            <p>
-              <Link href="/login">Login</Link> /{" "}
-              <span>
-                <Link href="/signup">Register</Link>
-              </span>
-            </p>
-            <p>Cart</p>
-            <p>Shop</p>
+          {/* Support */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Support</h3>
+
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                New Colony, Palwal
+                <br />
+                Haryana, India 121102
+              </li>
+              <li>
+                <a
+                  href="mailto:support@shoppy.com"
+                  className="hover:text-white transition"
+                >
+                  support@shoppy.com
+                </a>
+              </li>
+              <li>
+                <a
+                  href="tel:+919876543210"
+                  className="hover:text-white transition"
+                >
+                  +91 98765 43210
+                </a>
+              </li>
+            </ul>
           </div>
 
-          <div className="flex justify-between flex-col">
-            <p className="text-xl font-medium"> Quick Link</p>
-            <p className="my-2">Privacy Policy</p>
-            <p className="my-2">Terms of Use</p>
-            <p className="my-2">FAQ</p>
-            <p className="my-2">Contact</p>
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <Link to="/" className="hover:text-white transition">
+                  Home
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/products" className="hover:text-white transition">
+                  Shop
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/cart" className="hover:text-white transition">
+                  Cart
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/contact" className="hover:text-white transition">
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
-          <div className="flex justify-between flex-col">
-            <p className="text-xl font-medium">Social Media</p>
-            <p className="my-2">Facebook</p>
-            <p className="my-2">Instagram</p>
-            <p className="my-2">Linkedin</p>
-            <p className="my-2">Github</p>
+          {/* Social */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <a href="#" className="hover:text-white transition">
+                  Facebook
+                </a>
+              </li>
+
+              <li>
+                <a href="#" className="hover:text-white transition">
+                  Instagram
+                </a>
+              </li>
+
+              <li>
+                <a href="#" className="hover:text-white transition">
+                  LinkedIn
+                </a>
+              </li>
+
+              <li>
+                <a href="#" className="hover:text-white transition">
+                  GitHub
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
+          © {new Date().getFullYear()} Shoppy. All rights reserved.
+        </div>
       </div>
-      <div className=" bg-black text-gray-500 text-center p-3 ">
-        @ Copyright Robin 2024. All right reserved
-      </div>
-    </>
+    </footer>
   );
 }

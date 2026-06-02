@@ -25,58 +25,70 @@ const features = [
 
 const Perks = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-8 mb-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <section className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-8">
         {features.map((feature) => (
           <div
             key={feature.id}
             className="
-              group
-              flex
-              flex-col
-              items-center
-              text-center
-              p-8
-              rounded-3xl
-              bg-white
-              shadow-[0_10px_40px_rgba(0,0,0,0.06)]
-              hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)]
-              hover:-translate-y-2
-              transition-all
-              duration-500
-            "
+          group
+          flex
+          flex-col
+          items-center
+          text-center
+          p-4
+          sm:p-5
+          md:p-6
+          lg:p-8
+          rounded-2xl
+          lg:rounded-3xl
+          bg-white
+          shadow-md
+          hover:shadow-xl
+          hover:-translate-y-1
+          lg:hover:-translate-y-2
+          transition-all
+          duration-300
+        "
           >
             <div
               className="
-                w-20
-                h-20
-                rounded-full
-                bg-black
-                flex
-                items-center
-                justify-center
-                mb-6
-                group-hover:bg-red-500
-                transition-all
-                duration-500
-              "
+            w-12 h-12
+            sm:w-14 sm:h-14
+            md:w-16 md:h-16
+            lg:w-20 lg:h-20
+            rounded-full
+            bg-black
+            flex
+            items-center
+            justify-center
+            mb-3
+            sm:mb-4
+            lg:mb-6
+            group-hover:bg-red-500
+            transition-all
+            duration-300
+          "
             >
               <FontAwesomeIcon
                 icon={feature.icon}
                 className="
-                  text-white
-                  text-3xl
-                  group-hover:scale-110
-                  transition
-                "
+              text-white
+              text-lg
+              sm:text-xl
+              md:text-2xl
+              lg:text-3xl
+            "
               />
             </div>
 
-            <h3 className="text-xl font-bold text-gray-900 mb-3">
+            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-2">
               {feature.title}
             </h3>
 
-            <p className="text-gray-500">{feature.description}</p>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-500">
+              {feature.description}
+            </p>
           </div>
         ))}
       </div>

@@ -80,9 +80,14 @@ const Cart = () => {
     0,
   );
 
-  if (loading) {
-    return <Loader />;
-  }
+    if (loading) {
+      return (
+        <div className=" min-h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      );
+    }
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
